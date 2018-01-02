@@ -11,7 +11,7 @@ import (
 
 func Test_Seal(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

@@ -13,7 +13,7 @@ import (
 
 func TestSysHealth_get(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp, err := http.Get(addr + "/v1/sys/health")
@@ -113,7 +113,7 @@ func TestSysHealth_get(t *testing.T) {
 
 func TestSysHealth_customcodes(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	queryurl, err := url.Parse(addr + "/v1/sys/health?uninitcode=581&sealedcode=523&activecode=202")
@@ -218,7 +218,7 @@ func TestSysHealth_customcodes(t *testing.T) {
 
 func TestSysHealth_head(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testData := []struct {

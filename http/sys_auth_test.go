@@ -10,9 +10,9 @@ import (
 
 func TestSysAuth(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpGet(t, token, addr+"/v1/sys/auth")
 
@@ -66,9 +66,9 @@ func TestSysAuth(t *testing.T) {
 
 func TestSysEnableAuth(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/auth/foo", map[string]interface{}{
 		"type":        "noop",
@@ -148,9 +148,9 @@ func TestSysEnableAuth(t *testing.T) {
 
 func TestSysDisableAuth(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/auth/foo", map[string]interface{}{
 		"type":        "noop",

@@ -10,9 +10,9 @@ import (
 
 func TestSysPolicies(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpGet(t, token, addr+"/v1/sys/policy")
 
@@ -41,9 +41,9 @@ func TestSysPolicies(t *testing.T) {
 
 func TestSysReadPolicy(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpGet(t, token, addr+"/v1/sys/policy/root")
 
@@ -72,9 +72,9 @@ func TestSysReadPolicy(t *testing.T) {
 
 func TestSysWritePolicy(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/policy/foo", map[string]interface{}{
 		"rules": `path "*" { capabilities = ["read"] }`,
@@ -113,9 +113,9 @@ func TestSysWritePolicy(t *testing.T) {
 
 func TestSysDeletePolicy(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/policy/foo", map[string]interface{}{
 		"rules": `path "*" { capabilities = ["read"] }`,

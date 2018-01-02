@@ -17,7 +17,7 @@ import (
 
 func TestRekey(t *testing.T) {
 	core, keys, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -56,7 +56,7 @@ func TestRekey(t *testing.T) {
 
 func TestRekey_arg(t *testing.T) {
 	core, keys, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -94,7 +94,7 @@ func TestRekey_arg(t *testing.T) {
 
 func TestRekey_init(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -129,7 +129,7 @@ func TestRekey_init(t *testing.T) {
 
 func TestRekey_cancel(t *testing.T) {
 	core, keys, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -161,7 +161,7 @@ func TestRekey_cancel(t *testing.T) {
 
 func TestRekey_status(t *testing.T) {
 	core, keys, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -189,7 +189,7 @@ func TestRekey_status(t *testing.T) {
 
 func TestRekey_init_pgp(t *testing.T) {
 	core, keys, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	bc := &logical.BackendConfig{

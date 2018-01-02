@@ -17,7 +17,7 @@ import (
 
 func TestHandler_cors(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	// Enable CORS and allow from any origin for testing.
@@ -98,7 +98,7 @@ func TestHandler_cors(t *testing.T) {
 
 func TestHandler_CacheControlNoStore(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	req, err := http.NewRequest("GET", addr+"/v1/sys/mounts", nil)
@@ -132,7 +132,7 @@ func TestHandler_CacheControlNoStore(t *testing.T) {
 // We use this test to verify header auth
 func TestSysMounts_headerAuth(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	req, err := http.NewRequest("GET", addr+"/v1/sys/mounts", nil)
@@ -274,7 +274,7 @@ func TestSysMounts_headerAuth(t *testing.T) {
 // We use this test to verify header auth wrapping
 func TestSysMounts_headerAuth_Wrapped(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	req, err := http.NewRequest("GET", addr+"/v1/sys/mounts", nil)
@@ -338,7 +338,7 @@ func TestSysMounts_headerAuth_Wrapped(t *testing.T) {
 
 func TestHandler_sealed(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	core.Seal(token)
@@ -382,7 +382,7 @@ func TestHandler_error(t *testing.T) {
 
 func TestHandler_nonPrintableChars(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	req, err := http.NewRequest("GET", addr+"/v1/sys/mounts\n", nil)

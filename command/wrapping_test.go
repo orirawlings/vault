@@ -13,7 +13,7 @@ import (
 
 func TestWrapping_Env(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -68,7 +68,7 @@ func TestWrapping_Env(t *testing.T) {
 
 func TestWrapping_Flag(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

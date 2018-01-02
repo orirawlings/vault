@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"testing"
 
 	"github.com/hashicorp/vault/vault"
 )
 
-func TestListener(t *testing.T) (net.Listener, string) {
-	fail := func(format string, args ...interface{}) {
-		panic(fmt.Sprintf(format, args...))
-	}
-	if t != nil {
-		fail = t.Fatalf
+func TestListener(fail func(format string, args ...interface{})) (net.Listener, string) {
+	if fail == nil {
+		fail = func(format string, args ...interface{}) {
+			panic(fmt.Sprintf(format, args...))
+		}
 	}
 
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
@@ -25,7 +23,7 @@ func TestListener(t *testing.T) (net.Listener, string) {
 	return ln, addr
 }
 
-func TestServerWithListener(t *testing.T, ln net.Listener, addr string, core *vault.Core) {
+func TestServerWithListener(ln net.Listener, addr string, core *vault.Core) {
 	// Create a muxer to handle our requests so that we can authenticate
 	// for tests.
 	mux := http.NewServeMux()
@@ -39,16 +37,10 @@ func TestServerWithListener(t *testing.T, ln net.Listener, addr string, core *va
 	go server.Serve(ln)
 }
 
-func TestServer(t *testing.T, core *vault.Core) (net.Listener, string) {
-	ln, addr := TestListener(t)
-	TestServerWithListener(t, ln, addr, core)
+func TestServer(fail func(format string, args ...interface{}), core *vault.Core) (net.Listener, string) {
+	ln, addr := TestListener(fail)
+	TestServerWithListener(ln, addr, core)
 	return ln, addr
-}
-
-func TestServerAuth(t *testing.T, addr string, token string) {
-	if _, err := http.Get(addr + "/_test/auth?token=" + token); err != nil {
-		t.Fatalf("error authenticating: %s", err)
-	}
 }
 
 func testHandleAuth(w http.ResponseWriter, req *http.Request) {

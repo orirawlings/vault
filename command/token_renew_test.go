@@ -12,7 +12,7 @@ import (
 
 func TestTokenRenew(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -51,7 +51,7 @@ func TestTokenRenew(t *testing.T) {
 
 func TestTokenRenewWithIncrement(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -91,7 +91,7 @@ func TestTokenRenewWithIncrement(t *testing.T) {
 
 func TestTokenRenewSelf(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -134,7 +134,7 @@ func TestTokenRenewSelf(t *testing.T) {
 
 func TestTokenRenewSelfWithIncrement(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

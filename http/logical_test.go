@@ -21,9 +21,9 @@ import (
 
 func TestLogical(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	// WRITE
 	resp := testHttpPut(t, token, addr+"/v1/secret/foo", map[string]interface{}{
@@ -67,18 +67,18 @@ func TestLogical(t *testing.T) {
 
 func TestLogical_noExist(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpGet(t, token, addr+"/v1/secret/foo")
 	testResponseStatus(t, resp, 404)
 }
 
 func TestLogical_StandbyRedirect(t *testing.T) {
-	ln1, addr1 := TestListener(t)
+	ln1, addr1 := TestListener(t.Fatalf)
 	defer ln1.Close()
-	ln2, addr2 := TestListener(t)
+	ln2, addr2 := TestListener(t.Fatalf)
 	defer ln2.Close()
 
 	// Create an HA Vault
@@ -126,9 +126,9 @@ func TestLogical_StandbyRedirect(t *testing.T) {
 		}
 	}
 
-	TestServerWithListener(t, ln1, addr1, core1)
-	TestServerWithListener(t, ln2, addr2, core2)
-	TestServerAuth(t, addr1, root)
+	TestServerWithListener(ln1, addr1, core1)
+	TestServerWithListener(ln2, addr2, core2)
+	testSeverAuth(t, addr1, root)
 
 	// WRITE to STANDBY
 	resp := testHttpPutDisableRedirect(t, root, addr2+"/v1/secret/foo", map[string]interface{}{
@@ -185,9 +185,9 @@ func TestLogical_StandbyRedirect(t *testing.T) {
 
 func TestLogical_CreateToken(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	// WRITE
 	resp := testHttpPut(t, token, addr+"/v1/auth/token/create", map[string]interface{}{
@@ -223,9 +223,9 @@ func TestLogical_CreateToken(t *testing.T) {
 
 func TestLogical_RawHTTP(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/mounts/foo", map[string]interface{}{
 		"type": "http",
@@ -251,9 +251,9 @@ func TestLogical_RawHTTP(t *testing.T) {
 
 func TestLogical_RequestSizeLimit(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	// Write a very large object, should fail
 	resp := testHttpPut(t, token, addr+"/v1/secret/foo", map[string]interface{}{

@@ -12,7 +12,7 @@ import (
 
 func TestAuditDisable(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -48,7 +48,7 @@ func TestAuditDisable(t *testing.T) {
 
 func TestAuditDisableWithOptions(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

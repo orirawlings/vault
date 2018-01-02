@@ -19,7 +19,7 @@ import (
 
 func TestGenerateRoot_Cancel(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -56,7 +56,7 @@ func TestGenerateRoot_Cancel(t *testing.T) {
 
 func TestGenerateRoot_status(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -89,7 +89,7 @@ func TestGenerateRoot_status(t *testing.T) {
 
 func TestGenerateRoot_OTP(t *testing.T) {
 	core, ts, keys, _ := vault.TestCoreWithTokenStore(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -203,7 +203,7 @@ func TestGenerateRoot_OTP(t *testing.T) {
 
 func TestGenerateRoot_PGP(t *testing.T) {
 	core, ts, keys, _ := vault.TestCoreWithTokenStore(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

@@ -12,7 +12,7 @@ import (
 
 func TestRenew(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -50,7 +50,7 @@ func TestRenew(t *testing.T) {
 
 func TestRenewBothWays(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	// write a secret with a lease

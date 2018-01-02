@@ -8,9 +8,9 @@ import (
 
 func TestHelp(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpGet(t, token, addr+"/v1/sys/mounts?help=1")
 

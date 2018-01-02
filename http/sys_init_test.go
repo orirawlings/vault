@@ -11,7 +11,7 @@ import (
 
 func TestSysInit_get(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	{
@@ -57,7 +57,7 @@ func TestSysInit_get(t *testing.T) {
 // supplied
 func TestSysInit_pgpKeysEntries(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp := testHttpPut(t, "", addr+"/v1/sys/init", map[string]interface{}{
@@ -72,7 +72,7 @@ func TestSysInit_pgpKeysEntries(t *testing.T) {
 // supplied for recovery config
 func TestSysInit_pgpKeysEntriesForRecovery(t *testing.T) {
 	core := vault.TestCoreNewSeal(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp := testHttpPut(t, "", addr+"/v1/sys/init", map[string]interface{}{
@@ -88,7 +88,7 @@ func TestSysInit_pgpKeysEntriesForRecovery(t *testing.T) {
 
 func TestSysInit_put(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp := testHttpPut(t, "", addr+"/v1/sys/init", map[string]interface{}{

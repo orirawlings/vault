@@ -21,7 +21,7 @@ import (
 
 func TestAuth_methods(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testAuthInit(t)
@@ -51,7 +51,7 @@ func TestAuth_methods(t *testing.T) {
 
 func TestAuth_token(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testAuthInit(t)
@@ -238,7 +238,7 @@ func TestAuth_wrapping(t *testing.T) {
 
 func TestAuth_token_nostore(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testAuthInit(t)
@@ -277,7 +277,7 @@ func TestAuth_token_nostore(t *testing.T) {
 
 func TestAuth_stdin(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testAuthInit(t)
@@ -308,7 +308,7 @@ func TestAuth_stdin(t *testing.T) {
 
 func TestAuth_badToken(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testAuthInit(t)
@@ -332,7 +332,7 @@ func TestAuth_badToken(t *testing.T) {
 
 func TestAuth_method(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	testAuthInit(t)

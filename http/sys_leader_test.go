@@ -10,7 +10,7 @@ import (
 
 func TestSysLeader_get(t *testing.T) {
 	core, _, _ := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp, err := http.Get(addr + "/v1/sys/leader")

@@ -10,9 +10,9 @@ import (
 
 func TestSysAudit(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/audit/noop", map[string]interface{}{
 		"type": "noop",
@@ -58,9 +58,9 @@ func TestSysAudit(t *testing.T) {
 
 func TestSysDisableAudit(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/audit/foo", map[string]interface{}{
 		"type": "noop",
@@ -95,9 +95,9 @@ func TestSysDisableAudit(t *testing.T) {
 
 func TestSysAuditHash(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPost(t, token, addr+"/v1/sys/audit/noop", map[string]interface{}{
 		"type": "noop",

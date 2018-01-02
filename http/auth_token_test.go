@@ -10,7 +10,7 @@ import (
 
 func TestAuthTokenCreate(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	config := api.DefaultConfig()
@@ -85,7 +85,7 @@ func TestAuthTokenCreate(t *testing.T) {
 
 func TestAuthTokenLookup(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	config := api.DefaultConfig()
@@ -119,7 +119,7 @@ func TestAuthTokenLookup(t *testing.T) {
 
 func TestAuthTokenLookupSelf(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	config := api.DefaultConfig()
@@ -148,7 +148,7 @@ func TestAuthTokenLookupSelf(t *testing.T) {
 
 func TestAuthTokenRenew(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	config := api.DefaultConfig()

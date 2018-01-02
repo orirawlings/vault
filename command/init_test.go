@@ -27,7 +27,7 @@ func TestInit(t *testing.T) {
 	}
 
 	core := vault.TestCore(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	init, err := core.Initialized()
@@ -74,7 +74,7 @@ func TestInit_Check(t *testing.T) {
 	}
 
 	core := vault.TestCore(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	// Should return 2, not initialized
@@ -113,7 +113,7 @@ func TestInit_custom(t *testing.T) {
 	}
 
 	core := vault.TestCore(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	init, err := core.Initialized()
@@ -215,7 +215,7 @@ func TestInit_PGP(t *testing.T) {
 	}
 
 	core := vault.TestCore(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	init, err := core.Initialized()

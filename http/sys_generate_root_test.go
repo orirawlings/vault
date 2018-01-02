@@ -17,9 +17,9 @@ import (
 
 func TestSysGenerateRootAttempt_Status(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp, err := http.Get(addr + "/v1/sys/generate-root/attempt")
 	if err != nil {
@@ -46,9 +46,9 @@ func TestSysGenerateRootAttempt_Status(t *testing.T) {
 
 func TestSysGenerateRootAttempt_Setup_OTP(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	otpBytes, err := vault.GenerateRandBytes(16)
 	if err != nil {
@@ -106,9 +106,9 @@ func TestSysGenerateRootAttempt_Setup_OTP(t *testing.T) {
 
 func TestSysGenerateRootAttempt_Setup_PGP(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/generate-root/attempt", map[string]interface{}{
 		"pgp_key": pgpkeys.TestPubKey1,
@@ -140,9 +140,9 @@ func TestSysGenerateRootAttempt_Setup_PGP(t *testing.T) {
 
 func TestSysGenerateRootAttempt_Cancel(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	otpBytes, err := vault.GenerateRandBytes(16)
 	if err != nil {
@@ -202,9 +202,9 @@ func TestSysGenerateRootAttempt_Cancel(t *testing.T) {
 
 func TestSysGenerateRoot_badKey(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	otpBytes, err := vault.GenerateRandBytes(16)
 	if err != nil {
@@ -221,9 +221,9 @@ func TestSysGenerateRoot_badKey(t *testing.T) {
 
 func TestSysGenerateRoot_ReAttemptUpdate(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	otpBytes, err := vault.GenerateRandBytes(16)
 	if err != nil {
@@ -247,9 +247,9 @@ func TestSysGenerateRoot_ReAttemptUpdate(t *testing.T) {
 
 func TestSysGenerateRoot_Update_OTP(t *testing.T) {
 	core, keys, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	otpBytes, err := vault.GenerateRandBytes(16)
 	if err != nil {
@@ -340,9 +340,9 @@ func TestSysGenerateRoot_Update_OTP(t *testing.T) {
 
 func TestSysGenerateRoot_Update_PGP(t *testing.T) {
 	core, keys, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/generate-root/attempt", map[string]interface{}{
 		"pgp_key": pgpkeys.TestPubKey1,

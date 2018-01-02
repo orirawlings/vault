@@ -15,7 +15,7 @@ import (
 
 func TestWrite(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -52,7 +52,7 @@ func TestWrite(t *testing.T) {
 
 func TestWrite_arbitrary(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	stdinR, stdinW := io.Pipe()
@@ -97,7 +97,7 @@ func TestWrite_arbitrary(t *testing.T) {
 
 func TestWrite_escaped(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -142,7 +142,7 @@ func TestWrite_file(t *testing.T) {
 	defer os.Remove(tf.Name())
 
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -187,7 +187,7 @@ func TestWrite_fileValue(t *testing.T) {
 	defer os.Remove(tf.Name())
 
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -224,7 +224,7 @@ func TestWrite_fileValue(t *testing.T) {
 
 func TestWrite_Output(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -250,7 +250,7 @@ func TestWrite_Output(t *testing.T) {
 
 func TestWrite_force(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

@@ -13,7 +13,7 @@ import (
 func TestUnseal(t *testing.T) {
 	core := vault.TestCore(t)
 	keys, _ := vault.TestCoreInit(t, core)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)
@@ -44,7 +44,7 @@ func TestUnseal(t *testing.T) {
 func TestUnseal_arg(t *testing.T) {
 	core := vault.TestCore(t)
 	keys, _ := vault.TestCoreInit(t, core)
-	ln, addr := http.TestServer(t, core)
+	ln, addr := http.TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	ui := new(cli.MockUi)

@@ -15,9 +15,9 @@ import (
 // supplied for rekey
 func TestSysRekey_Init_pgpKeysEntriesForRekey(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/rekey/init", map[string]interface{}{
 		"secret_shares":    5,
@@ -29,9 +29,9 @@ func TestSysRekey_Init_pgpKeysEntriesForRekey(t *testing.T) {
 
 func TestSysRekey_Init_Status(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp, err := http.Get(addr + "/v1/sys/rekey/init")
 	if err != nil {
@@ -58,9 +58,9 @@ func TestSysRekey_Init_Status(t *testing.T) {
 
 func TestSysRekey_Init_Setup(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	// Start rekey
 	resp := testHttpPut(t, token, addr+"/v1/sys/rekey/init", map[string]interface{}{
@@ -118,9 +118,9 @@ func TestSysRekey_Init_Setup(t *testing.T) {
 
 func TestSysRekey_Init_Cancel(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/rekey/init", map[string]interface{}{
 		"secret_shares":    5,
@@ -156,9 +156,9 @@ func TestSysRekey_Init_Cancel(t *testing.T) {
 
 func TestSysRekey_badKey(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/rekey/update", map[string]interface{}{
 		"key": "0123",
@@ -168,9 +168,9 @@ func TestSysRekey_badKey(t *testing.T) {
 
 func TestSysRekey_Update(t *testing.T) {
 	core, keys, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/rekey/init", map[string]interface{}{
 		"secret_shares":    5,
@@ -235,9 +235,9 @@ func TestSysRekey_Update(t *testing.T) {
 
 func TestSysRekey_ReInitUpdate(t *testing.T) {
 	core, keys, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/rekey/init", map[string]interface{}{
 		"secret_shares":    5,

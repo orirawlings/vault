@@ -13,9 +13,9 @@ func TestSysConfigCors(t *testing.T) {
 	var resp *http.Response
 
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	corsConf := core.CORSConfig()
 

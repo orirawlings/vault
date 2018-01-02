@@ -16,7 +16,7 @@ import (
 func TestSysSealStatus(t *testing.T) {
 	core := vault.TestCore(t)
 	vault.TestCoreInit(t, core)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp, err := http.Get(addr + "/v1/sys/seal-status")
@@ -56,7 +56,7 @@ func TestSysSealStatus(t *testing.T) {
 
 func TestSysSealStatus_uninit(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp, err := http.Get(addr + "/v1/sys/seal-status")
@@ -68,9 +68,9 @@ func TestSysSealStatus_uninit(t *testing.T) {
 
 func TestSysSeal(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/seal", nil)
 	testResponseStatus(t, resp, 204)
@@ -86,9 +86,9 @@ func TestSysSeal(t *testing.T) {
 
 func TestSysSeal_unsealed(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/seal", nil)
 	testResponseStatus(t, resp, 204)
@@ -105,7 +105,7 @@ func TestSysSeal_unsealed(t *testing.T) {
 func TestSysUnseal(t *testing.T) {
 	core := vault.TestCore(t)
 	keys, _ := vault.TestCoreInit(t, core)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	for i, key := range keys {
@@ -156,7 +156,7 @@ func TestSysUnseal(t *testing.T) {
 func TestSysUnseal_badKey(t *testing.T) {
 	core := vault.TestCore(t)
 	vault.TestCoreInit(t, core)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	resp := testHttpPut(t, "", addr+"/v1/sys/unseal", map[string]interface{}{
@@ -167,7 +167,7 @@ func TestSysUnseal_badKey(t *testing.T) {
 
 func TestSysUnseal_Reset(t *testing.T) {
 	core := vault.TestCore(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
 
 	thresh := 3
@@ -268,9 +268,9 @@ func TestSysUnseal_Reset(t *testing.T) {
 // have not opened up a permissions hole.
 func TestSysSeal_Permissions(t *testing.T) {
 	core, _, root := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, root)
+	testSeverAuth(t, addr, root)
 
 	// Set the 'test' policy object to permit write access to sys/seal
 	req := &logical.Request{
@@ -376,9 +376,9 @@ func TestSysSeal_Permissions(t *testing.T) {
 
 func TestSysStepDown(t *testing.T) {
 	core, _, token := vault.TestCoreUnsealed(t)
-	ln, addr := TestServer(t, core)
+	ln, addr := TestServer(t.Fatalf, core)
 	defer ln.Close()
-	TestServerAuth(t, addr, token)
+	testSeverAuth(t, addr, token)
 
 	resp := testHttpPut(t, token, addr+"/v1/sys/step-down", nil)
 	testResponseStatus(t, resp, 204)
