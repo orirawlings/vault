@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"sort"
 	"strings"
 	"time"
 
@@ -196,7 +195,7 @@ func (c *OperatorMigrateCommand) migrate(config *migratorConfig) error {
 
 // migrateAll copies all keys in lexicographic order.
 func (c *OperatorMigrateCommand) migrateAll(ctx context.Context, from physical.Backend, to physical.Backend) error {
-	return dfsScan(ctx, from, func(ctx context.Context, path string) error {
+	return scan(ctx, from, func(ctx context.Context, path string) error {
 		if path < c.flagStart || path == storageMigrationLock || path == vault.CoreLockPath {
 			return nil
 		}
@@ -294,39 +293,40 @@ func parseStorage(result *migratorConfig, list *ast.ObjectList, name string) err
 	return nil
 }
 
-// dfsScan will invoke cb with every key from source.
-// Keys will be traversed in lexicographic, depth-first order.
-func dfsScan(ctx context.Context, source physical.Backend, cb func(ctx context.Context, path string) error) error {
-	dfs := []string{""}
+// scan will invoke cb with every key from source.
+func scan(ctx context.Context, source physical.Backend, cb func(ctx context.Context, path string) error) error {
 
-	for l := len(dfs); l > 0; l = len(dfs) {
-		key := dfs[len(dfs)-1]
+	var visit func(chan error, string)
+	visit = func(errs chan error, key string) {
+		select {
+		case <-ctx.Done():
+			errs <- nil
+			return
+		default:
+		}
+		var err error
 		if key == "" || strings.HasSuffix(key, "/") {
 			children, err := source.List(ctx, key)
 			if err != nil {
-				return errwrap.Wrapf("failed to scan for children: {{err}}", err)
+				errs <- errwrap.Wrapf("failed to scan for children: {{err}}", err)
+				return
 			}
-			sort.Strings(children)
-
-			// remove List-triggering key and add children in reverse order
-			dfs = dfs[:len(dfs)-1]
-			for i := len(children) - 1; i >= 0; i-- {
-				dfs = append(dfs, key+children[i])
+			childErrs := make(chan error)
+			for _, child := range children {
+				go visit(childErrs, key+child)
+			}
+			for range children {
+				if e := <-childErrs; e != nil {
+					err = e
+				}
 			}
 		} else {
-			err := cb(ctx, key)
-			if err != nil {
-				return err
-			}
-
-			dfs = dfs[:len(dfs)-1]
+			err = cb(ctx, key)
 		}
-
-		select {
-		case <-ctx.Done():
-			return nil
-		default:
-		}
+		errs <- err
+		return
 	}
-	return nil
+	errs := make(chan error)
+	go visit(errs, "")
+	return <-errs
 }
