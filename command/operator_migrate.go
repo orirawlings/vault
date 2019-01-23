@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"sort"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/go-multierror"
 
 	"github.com/hashicorp/errwrap"
 	log "github.com/hashicorp/go-hclog"
@@ -196,7 +197,7 @@ func (c *OperatorMigrateCommand) migrate(config *migratorConfig) error {
 
 // migrateAll copies all keys in lexicographic order.
 func (c *OperatorMigrateCommand) migrateAll(ctx context.Context, from physical.Backend, to physical.Backend) error {
-	return dfsScan(ctx, from, func(ctx context.Context, path string) error {
+	return scan(ctx, from, func(ctx context.Context, path string) error {
 		if path < c.flagStart || path == storageMigrationLock || path == vault.CoreLockPath {
 			return nil
 		}
@@ -294,39 +295,33 @@ func parseStorage(result *migratorConfig, list *ast.ObjectList, name string) err
 	return nil
 }
 
-// dfsScan will invoke cb with every key from source.
-// Keys will be traversed in lexicographic, depth-first order.
-func dfsScan(ctx context.Context, source physical.Backend, cb func(ctx context.Context, path string) error) error {
-	dfs := []string{""}
-
-	for l := len(dfs); l > 0; l = len(dfs) {
-		key := dfs[len(dfs)-1]
+// scan will invoke cb with every key from source.
+func scan(ctx context.Context, source physical.Backend, cb func(ctx context.Context, path string) error) error {
+	var visit func(string) error
+	visit = func(key string) error {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+		}
 		if key == "" || strings.HasSuffix(key, "/") {
 			children, err := source.List(ctx, key)
 			if err != nil {
 				return errwrap.Wrapf("failed to scan for children: {{err}}", err)
 			}
-			sort.Strings(children)
-
-			// remove List-triggering key and add children in reverse order
-			dfs = dfs[:len(dfs)-1]
-			for i := len(children) - 1; i >= 0; i-- {
-				dfs = append(dfs, key+children[i])
+			childErrs := make(chan error)
+			for _, child := range children {
+				go func(child string) {
+					childErrs <- visit(key + child)
+				}(child)
 			}
-		} else {
-			err := cb(ctx, key)
-			if err != nil {
-				return err
+			var e *multierror.Error
+			for range children {
+				e = multierror.Append(e, <-childErrs)
 			}
-
-			dfs = dfs[:len(dfs)-1]
+			return e.ErrorOrNil()
 		}
-
-		select {
-		case <-ctx.Done():
-			return nil
-		default:
-		}
+		return cb(ctx, key)
 	}
-	return nil
+	return visit("")
 }
